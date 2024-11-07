@@ -1,4 +1,5 @@
-export async function getPokemon(url: string) {
+export async function getPokemon(url: string | null) {
+  if (!url) return
   try {
     const response = await fetch(url)
     const data = await response.json()
