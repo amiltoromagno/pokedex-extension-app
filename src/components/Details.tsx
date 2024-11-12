@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FaArrowLeft } from 'react-icons/fa6'
 import { getAdditionalPokemonInfo, getPokemon } from '../services/apiService'
 import { Types } from '../constants/types'
+import Info from './Info'
 
 interface Props {
   url: string | null
@@ -10,25 +11,34 @@ interface Props {
 
 const Details = (props: Props) => {
   const [info, setInfo] = useState<any>(null)
+  const [addInfo, setAddInfo] = useState<any>(null)
   const [height, setHeight] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [gen, setGen] = useState<string | null>(null)
   const [description, setDescription] = useState<string | null>(null)
 
   useEffect(() => {
-    getPokemon(props.url)
-      .then(result => {
-        setInfo(result)
-        convertHeight(result.height)
-        convertWeight(result.weight)
-        getAdditionalInfo(result.name)
-      })
+    getPokemon(props.url).then(result => {
+      setInfo(result)
+      convertHeight(result.height)
+      convertWeight(result.weight)
+      getAdditionalInfo(result.name)
+    })
   }, [props.url])
 
   const getAdditionalInfo = (name: string) => {
     getAdditionalPokemonInfo(name).then(result => {
+      setAddInfo(result)
       getGeneration(result.generation.name)
-      getDescription(result.flavor_text_entries[0].flavor_text)
+      
+      const englishFlavorText = result.flavor_text_entries.find(
+        (entry: any) => entry.language.name === 'en'
+      )
+      if (englishFlavorText) {
+        getDescription(englishFlavorText.flavor_text)
+        return
+      }
+      getDescription('No english description available')
     })
   }
 
@@ -61,8 +71,11 @@ const Details = (props: Props) => {
             </button>
           </div>
           <div className='h-[95%]'>
-            <div className='h-[10%] text-2xl'>
-              {info && info.name.charAt(0).toUpperCase() + info.name.slice(1)}
+            <div className='h-[10%] text-2xl flex justify-center'>
+              <div>
+                {info && info.name.charAt(0).toUpperCase() + info.name.slice(1)}
+              </div>
+              <div className='text-gray-400'>#{addInfo?.id}</div>
             </div>
             <div className='h-25% flex justify-center items-center'>
               <img
@@ -70,10 +83,33 @@ const Details = (props: Props) => {
                 alt={
                   info && info.name.charAt(0).toUpperCase() + info.name.slice(1)
                 }
+                className='h-24'
               />
             </div>
-            <div className='h-[15%] flex items-center'>
-              <div className='flex-1'>
+            <div className='h-[5%] mt-3 flex items-center justify-center'>
+              <div className='w-[60%] flex justify-center bg-white rounded-full'>
+                <div className='flex w-[300px]'>
+                  {info?.types?.map((item: any) => {
+                    const type = Types[item.type.name]
+                    return (
+                      <div
+                        key={item.type?.name}
+                        className={`flex-1 flex items-center justify-center ${type?.color}`}
+                      >
+                        {type?.icon && (
+                          <div className='mr-2'>
+                            <type.icon />
+                          </div>
+                        )}
+                        <div className='flex items-center'>{type?.name}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+            <div className='h-[10%] flex items-center mt-3 bg-white rounded-full'>
+              <div className='flex-1 border-r-2'>
                 <div className='text-xs'>Height</div>
                 <div>{height}m</div>
               </div>
@@ -81,35 +117,15 @@ const Details = (props: Props) => {
                 <div className='text-xs'>Weight</div>
                 <div>{weight}kg</div>
               </div>
-              <div className='flex-1'>
+              <div className='flex-1 border-l-2'>
                 <div className='text-xs'>Generation</div>
                 <div>Gen {gen}</div>
               </div>
             </div>
-            <div className='h-[10%]'>
-              <div className='w-full text-xs'>Types</div>
-              <div className='w-100 flex justify-center'>
-                <div className='flex w-[60%]'>
-                  {info?.types?.map((item: any) => {
-                    const type = Types[item.type.name]
-                    return (
-                      <div
-                        key={item.type.name}
-                        className={`flex-1 flex items-center justify-center ${type.color}`}
-                      >
-                        <div className='mr-2'>
-                          <type.icon />
-                        </div>
-                        <div>{type.name}</div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
+            <div className='min-h-[10%] max-h-[80px] p-2 text-sm mt-3 flex items-center justify-center bg-white rounded-full'>
+              <div className='w-[90%]'>{description || '-'}</div>
             </div>
-            <div className='h-[15%] text-sm italic'>
-              <span>{description}</span>
-            </div>
+            <Info info={info} addInfo={addInfo} />
           </div>
         </div>
       </div>

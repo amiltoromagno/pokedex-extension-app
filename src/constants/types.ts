@@ -14,6 +14,7 @@ import {
   FaCogs,
   FaHandsHelping
 } from 'react-icons/fa'
+import { FaBrain, FaCircle, FaMountain } from 'react-icons/fa6'
 
 export const Types: any = {
   fire: {
@@ -53,7 +54,7 @@ export const Types: any = {
   },
   fairy: {
     name: 'Fairy',
-    color: 'text-pink-500',
+    color: 'text-pink-400',
     icon: FaCloudSun
   },
   poison: {
@@ -90,5 +91,20 @@ export const Types: any = {
     name: 'Rock',
     color: 'text-yellow-700',
     icon: FaGem
+  },
+  ground: {
+    name: 'Ground',
+    color: 'text-brown-300',
+    icon: FaMountain
+  },
+  normal: {
+    name: 'Normal',
+    color: 'text-gray-600',
+    icon: FaCircle
+  },
+  psychic: {
+    name: 'Psychic',
+    color: 'text-pink-600',
+    icon: FaBrain
   }
 }
