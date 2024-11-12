@@ -1,20 +1,26 @@
 {
-    "manifest_version": 2,
-    "name": "Pokédex",
-    "version": "1.0",
-    "description": "A Pokédex extension",
-    "browser_action": {
-      "default_popup": "index.html",
-      "default_icon": "pokeball-logo.svg"
-    },
-    "permissions": [],
-    "icons": {
-      "48": "pokeball.svg"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["src/main.tsx"]
-      }
-    ]
-  }
+  "manifest_version": 2,
+  "name": "Pokédex",
+  "version": "1.0",
+  "description": "A Pokédex extension",
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": "pokeball.svg"
+  },
+  "permissions": [],
+  "icons": {
+    "16": "pokeball.svg",
+    "48": "pokeball.svg",
+    "128": "pokeball.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/main.tsx"
+      ]
+    }
+  ]
+}
