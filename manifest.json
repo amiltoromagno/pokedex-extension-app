@@ -9,7 +9,7 @@
     },
     "permissions": [],
     "icons": {
-      "48": "pokeball-logo.svg"
+      "48": "pokeball.svg"
     },
     "content_scripts": [
       {
