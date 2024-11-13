@@ -21,6 +21,5 @@ to start the application.
 The build can be done using the command 
 ```
 npm run build
-
 ```
 which will create a vite build of the app in the `/dist` folder.
